@@ -1,6 +1,6 @@
 resource "aws_elb" "bar" {
-  name               = "raham-terraform-elb"
-  availability_zones = ["ap-southeast-1a", "ap-southeast-1b"]
+  name               = "sai-terraform-elb"
+  availability_zones = ["us-east-1a", "us-east-1b"]
 
   listener {
     instance_port     = 80
@@ -18,10 +18,10 @@ resource "aws_elb" "bar" {
   }
 
   instances                 = ["${aws_instance.one.id}", "${aws_instance.two.id}"]
-  cross_zone_load_balancing = true
+  cross_zone_load_balancing = true #Here both the app server and the web server on the same avaliabitlty zone then it will be true otherwise it will be consider as the false
   idle_timeout              = 400
   tags = {
-    Name = "raham-tf-elb"
+    Name = "sai-tf-elb"
   }
 }
 
