@@ -1,35 +1,49 @@
 pipeline {
-    agent any 
+    agent any
+
+    parameters {
+        choice(
+            name: 'ACTION',
+            choices: ['apply', 'destroy'],
+            description: 'Select whether to apply or destroy the Terraform infrastructure'
+        )
+    }
 
     environment {
         AWS_ACCESS_KEY_ID     = credentials('accesskey')
         AWS_SECRET_ACCESS_KEY = credentials('secretkey')
     }
-    
+
     stages {
-        stage('checkout') {
+        stage('Checkout') {
             steps {
                 git 'https://github.com/devopsbyraham/terraform-project.git'
             }
         }
-        stage('init') {
+
+        stage('Init') {
             steps {
                 sh 'terraform init'
             }
         }
-        stage('validate') {
+
+        stage('Validate') {
             steps {
-                sh 'terraform validate'                
+                sh 'terraform validate'
             }
         }
-        stage('plan') {
+
+        stage('Plan') {
             steps {
-                sh 'terraform plan'
+                sh "terraform plan"
             }
         }
-        stage('action') {
+
+        stage('Action') {
             steps {
-                sh 'terraform $action --auto-approve'
+                script {
+                    sh "terraform ${params.ACTION} --auto-approve"
+                }
             }
         }
     }
